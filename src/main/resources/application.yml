@@ -1,0 +1,83 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: STUDENT-SERVICE
+  data:
+    mongodb:
+      username: admin
+      password: iopjkl@890
+      uri:
+        mongodb://localhost:27017/STUDENT_DB
+
+  #import config files
+  config:
+    import: optional:configserver:http://localhost:8086
+
+
+#eureka:
+#  instance:
+#    prefer-ip-address: true
+#  client:
+#    fetch-registry: true
+#    register-with-eureka: true
+#    service-url:
+#      defaultZone: http://localhost:8080/eureka
+
+#Ressiliance4J // ACUATOR // HEALTH
+
+management:
+  health:
+    circuit-breakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+  endpoint:
+    health:
+      show-details: always
+
+
+
+#Resillance4j
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      coursebreaker:
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 10
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 6s
+        permittedNumberOfCallsInHalfOpenState: 2
+        slidingWindowSize: 10
+        slidingWindowType: COUNT_BASED
+
+    #@Retry
+
+  retry:
+    instances:
+      courseretry:
+        maxAttempts: 4
+        waitDuration: 5s
+
+      #RateLimiter
+#  rate-limiter:
+#    instances:
+#      courselimiter:
+#        limitForPeriod: 2
+#        timeoutDuration:  2s
+#        limitRefreshPeriod: 4s
+
+
+
+
+
+
+
+
